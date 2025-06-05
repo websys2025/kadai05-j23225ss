@@ -4,18 +4,29 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">天気予報API</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
-        <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
+        地域番号6桁：<input type="text" name="code">
+        <button type="button" id="btn1" onclick="api(this.form)">実行</button>
     </p></form>
     
-    <div id="result"></div>
+    <div id="result">結果はここに表示</div>
     <script>
-        async function some_api(myForm) {
+        async function api(myForm) {
+            const endpoint = "https://www.jma.go.jp/bosai/forecast/data/forecast/";
             // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
-            document.apiform.reset();
+            //console.log(myForm.code.value);
+            const call = endpoint + myForm.code.value + ".json";
+            // zipcloudのAPI呼び出して結果を表示する
+            const aRes = await fetch(call);
+            const data = await aRes.text();
+            //onsole.log(data);
+            const data_json = JSON.parse(data);
+            //console.log(data_json.publishingOffice);
+            //var elem = document.getElementById("publishingOffice");
+            //elem.innerText = data.name;
+
+            document.getElementById("result").innerHTML = data; // 現状ではそのまま表示しているだけ
         }
     </script>
 </body>
